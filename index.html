@@ -1,133 +1,52 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0b0d12">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="MovieHub">
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <title>MovieHub</title>
-  <style>
-    :root{--bg:#07090d;--panel:#10141c;--panel2:#151a24;--text:#f7f8fb;--muted:#9ba3b2;--accent:#ff3158;--accent2:#ff6a3d;--line:#242a36}
-    *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:radial-gradient(900px 420px at 50% -10%,#20283a 0%,var(--bg) 60%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;min-height:100vh}
-    button,input{font:inherit}button{border:0;color:inherit;cursor:pointer}
-    .app{max-width:1050px;margin:auto;padding:env(safe-area-inset-top) 14px calc(90px + env(safe-area-inset-bottom))}
-    header{position:sticky;top:0;z-index:20;padding:14px 0 12px;background:linear-gradient(var(--bg) 75%,transparent);backdrop-filter:blur(12px)}
-    .top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-size:25px;font-weight:800;letter-spacing:-.8px}.brand span{color:var(--accent)}
-    .iconbtn{width:42px;height:42px;border-radius:14px;background:var(--panel);border:1px solid var(--line);font-size:18px}
-    .search{margin-top:12px;display:flex;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:0 14px}
-    .search input{width:100%;padding:13px 8px;border:0;outline:0;background:transparent;color:white;font-size:15px}.search span{color:var(--muted)}
-    .hero{margin-top:12px;padding:20px;border-radius:24px;background:linear-gradient(135deg,#1c2230,#10131a 65%,#24131a);border:1px solid var(--line);overflow:hidden;position:relative}
-    .hero:after{content:"";position:absolute;inset:auto -50px -90px auto;width:240px;height:240px;background:var(--accent);filter:blur(80px);opacity:.16}
-    .eyebrow{color:#ff8aa0;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px}.hero h1{font-size:30px;line-height:1.05;margin:8px 0}.hero p{max-width:600px;color:#c4cad5;line-height:1.45;margin:0 0 15px}
-    .primary{background:linear-gradient(90deg,var(--accent),var(--accent2));padding:11px 17px;border-radius:13px;font-weight:750;box-shadow:0 10px 30px #ff31582a}
-    .tabs{display:flex;gap:8px;overflow:auto;padding:16px 0 10px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tab{white-space:nowrap;padding:9px 14px;border-radius:999px;background:var(--panel);border:1px solid var(--line);color:var(--muted);font-size:13px}.tab.active{background:#fff;color:#0b0d12;border-color:#fff}
-    .sectionhead{display:flex;justify-content:space-between;align-items:center;margin:8px 2px 12px}.sectionhead h2{font-size:18px;margin:0}.count{color:var(--muted);font-size:12px}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-width:0}.poster{aspect-ratio:16/10;background:linear-gradient(135deg,#242b39,#11141b);display:flex;align-items:flex-end;padding:12px;position:relative}.poster:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 75% 25%,#ffffff1c,transparent 35%)}.tag{position:absolute;top:9px;left:9px;background:#0009;border:1px solid #ffffff18;border-radius:8px;padding:5px 7px;font-size:10px;font-weight:700}.posterTitle{font-size:20px;font-weight:850;letter-spacing:-.6px;z-index:1}.body{padding:11px}.meta{font-size:12px;color:var(--muted);margin-bottom:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.actions{display:flex;gap:7px}.smallbtn{flex:1;padding:9px 6px;border-radius:11px;background:var(--panel2);border:1px solid var(--line);font-size:12px;font-weight:700}.smallbtn.download{background:#202631}.smallbtn:active,.primary:active,.iconbtn:active{transform:scale(.98)}
-    .empty{padding:35px 18px;text-align:center;color:var(--muted);background:var(--panel);border:1px dashed var(--line);border-radius:18px}.empty strong{display:block;color:white;margin-bottom:5px}
-    .downloads{display:none}.downloads.show{display:block}.home.hide{display:none}
-    .download-item{display:flex;gap:12px;align-items:center;padding:12px;background:var(--panel);border:1px solid var(--line);border-radius:16px;margin-bottom:9px}.thumb{width:72px;height:48px;border-radius:10px;background:#252b37;display:grid;place-items:center;font-size:20px}.di{min-width:0;flex:1}.di strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.di small{color:var(--muted)}.playdl{padding:9px 11px;border-radius:10px;background:#fff;color:#08090c;font-weight:750;font-size:12px}
-    nav{position:fixed;z-index:30;bottom:0;left:0;right:0;padding:9px 12px calc(9px + env(safe-area-inset-bottom));background:#0b0d12eF;border-top:1px solid var(--line);backdrop-filter:blur(18px);display:flex;justify-content:center}.navin{max-width:560px;width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.navbtn{background:transparent;color:var(--muted);padding:7px;border-radius:12px;font-size:11px}.navbtn.active{background:#171b24;color:white}.navbtn div{font-size:18px;margin-bottom:2px}
-    .modal{display:none;position:fixed;inset:0;z-index:50;background:#000e;align-items:center;justify-content:center;padding:15px}.modal.show{display:flex}.modalbox{width:min(900px,100%);background:#0e1117;border:1px solid #2b303c;border-radius:20px;overflow:hidden;box-shadow:0 30px 80px #000}.modalhead{display:flex;justify-content:space-between;align-items:center;padding:12px 14px}.modalhead strong{font-size:15px}.close{background:#1a1e27;width:36px;height:36px;border-radius:10px}.modal video{display:block;width:100%;max-height:72vh;background:#000}.notice{padding:10px 14px;color:var(--muted);font-size:11px}
-    .toast{position:fixed;z-index:80;left:50%;bottom:95px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:#f7f8fb;color:#090a0d;padding:11px 15px;border-radius:12px;font-size:13px;font-weight:700;transition:.25s;max-width:90%;text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    @media(min-width:700px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.hero{padding:28px}.hero h1{font-size:38px}}
-  </style>
-</head>
-<body>
-<div class="app">
-<header>
-  <div class="top"><div class="brand">Movie<span>Hub</span></div><button class="iconbtn" id="installBtn" title="Install">＋</button></div>
-  <label class="search"><span>⌕</span><input id="search" placeholder="Search movies, anime, action..." autocomplete="off"></label>
-</header>
-
-<main>
-<section class="home" id="home">
-  <div class="hero"><div class="eyebrow">Your personal movie library</div><h1>Watch. Download. Go offline.</h1><p>A clean iPhone-friendly movie hub for videos you are authorized to watch and save offline.</p><button class="primary" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">Browse library</button></div>
-  <div class="tabs" id="tabs"></div>
-  <div class="sectionhead"><h2 id="sectionTitle">Featured</h2><span class="count" id="count"></span></div>
-  <div class="grid" id="catalog"></div>
-</section>
-
-<section class="downloads" id="downloads">
-  <div class="sectionhead"><h2>Downloads</h2><span class="count" id="downloadCount">0 saved</span></div>
-  <div id="downloadList"></div>
-  <div class="empty" id="downloadEmpty"><strong>No offline videos yet</strong>Tap Download on an authorized video and it will appear here.</div>
-</section>
-</main>
-</div>
-
-<nav><div class="navin">
-  <button class="navbtn active" data-nav="home"><div>⌂</div>Home</button>
-  <button class="navbtn" data-nav="search"><div>⌕</div>Search</button>
-  <button class="navbtn" data-nav="downloads"><div>⇩</div>Downloads</button>
-</div></nav>
-
-<div class="modal" id="modal"><div class="modalbox">
-  <div class="modalhead"><strong id="modalTitle">Player</strong><button class="close" id="close">×</button></div>
-  <video id="player" controls playsinline></video>
-  <div class="notice">Offline playback is available for videos saved by MovieHub on this device.</div>
-</div></div>
-<div class="toast" id="toast"></div>
-
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08090d"><title>MovieHub 2.0</title><link rel="manifest" href="manifest.json">
+<style>
+:root{--bg:#08090d;--panel:#11131a;--text:#f5f7fb;--muted:#9aa0ad;--accent:#e50914;--line:#252936}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;background:rgba(8,9,13,.94);backdrop-filter:blur(14px);padding:16px;border-bottom:1px solid var(--line)}
+.logo{font-size:25px;font-weight:800}.logo span{color:var(--accent)}
+.search{margin-top:13px;width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:13px;background:#171922;color:white;font-size:16px;outline:none}
+main{padding:18px 16px 95px;max-width:1100px;margin:auto}.hero{border-radius:20px;padding:24px 20px;background:linear-gradient(135deg,#252936,#0d0e13);min-height:190px;display:flex;flex-direction:column;justify-content:end;margin-bottom:22px}
+.hero h1{margin:0 0 7px;font-size:29px}.hero p{margin:0;color:#c0c5d0}.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:700;background:var(--accent);color:#fff;margin-top:15px;width:max-content}
+.section{margin:23px 0}.section h2{font-size:20px;margin:0 0 12px}.chips{display:flex;gap:8px;overflow:auto;padding-bottom:3px}.chip{white-space:nowrap;border:1px solid var(--line);background:#12141b;color:#ddd;padding:9px 13px;border-radius:999px}.chip.active{background:#fff;color:#111}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{background:var(--panel);border-radius:14px;overflow:hidden;border:1px solid var(--line)}.poster{height:190px;background:linear-gradient(145deg,#343846,#171922);display:flex;align-items:end;padding:12px;font-weight:800}.meta{padding:11px}.title{font-weight:700}.small{color:var(--muted);font-size:12px;margin-top:4px}.card button{margin:9px 11px 12px;width:calc(100% - 22px);padding:9px;border:0;border-radius:9px;background:#262a35;color:white;font-weight:700}
+.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:15px}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:10;background:rgba(12,13,18,.97);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px 4px calc(10px + env(safe-area-inset-bottom))}
+nav button{background:none;border:0;color:#aeb3bf;font-size:12px}nav b{display:block;font-size:19px;margin-bottom:2px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:20;padding:55px 12px 20px;overflow:auto}.modalbox{max-width:700px;margin:auto;background:#101219;border:1px solid var(--line);border-radius:18px;padding:18px}.close{float:right;background:none;color:white;border:0;font-size:25px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}.poster{height:240px}}
+</style></head><body>
+<header><div class="logo">Movie<span>Hub</span></div><input id="search" class="search" placeholder="Search movies, shows & anime…"></header>
+<main><section class="hero"><h1>Watch. Discover. Go.</h1><p>A cinematic library for movies, TV and anime.</p><button class="btn" onclick="render()">Browse Library</button></section>
+<section class="section"><h2>Genres</h2><div id="chips" class="chips"></div></section>
+<section class="section"><h2>Popular Picks</h2><div id="grid" class="grid"></div></section>
+<section class="section"><h2>Free Streaming</h2><div class="empty">MovieHub can open legitimate free catalogs such as Plex. Availability varies by country.</div></section></main>
+<nav><button onclick="render()"><b>⌂</b>Home</button><button onclick="focusSearch()"><b>⌕</b>Search</button><button onclick="openInfo('My List','Your watchlist can be added in the next update.')"><b>♡</b>My List</button><button onclick="openInfo('Downloads','Offline downloads work only for videos whose source permits downloading. Plex free Movies & Shows does not permit offline downloads.')"><b>⇩</b>Downloads</button></nav>
+<div id="modal" class="modal"><div class="modalbox"><button class="close" onclick="closeModal()">×</button><div id="detail"></div></div></div>
 <script>
-const movies=[
- {id:"bbb",title:"Big Buck Bunny",cat:"Animation",year:"2008",desc:"Open movie sample",src:"https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4"},
- {id:"sintel",title:"Sintel",cat:"Action",year:"2010",desc:"Open movie trailer",src:"https://media.w3.org/2010/05/sintel/trailer.mp4"},
- {id:"steel",title:"Tears of Steel",cat:"Action",year:"2012",desc:"Open movie sample",src:"https://media.w3.org/2010/05/bunny/trailer.mp4"},
- {id:"elephants",title:"Elephants Dream",cat:"Animation",year:"2006",desc:"Open movie sample",src:"https://media.w3.org/2010/05/video/movie_300.mp4"},
- {id:"anime",title:"Anime Demo",cat:"Anime",year:"Demo",desc:"Add your authorized source",src:""}
+const genres=["All","Action","Anime","Horror","Sci‑Fi","Comedy","Animation","Drama","Thriller"];
+const items=[
+["Heat","1995","Action","Free on Plex","https://watch.plex.tv/"],
+["Godzilla","1998","Action","Free on Plex","https://watch.plex.tv/"],
+["Snatch","2000","Crime","Free on Plex","https://watch.plex.tv/"],
+["Wrong Turn","2003","Horror","Free on Plex","https://watch.plex.tv/"],
+["Hannibal","TV","Drama","Free on Plex","https://watch.plex.tv/"],
+["Into the Badlands","TV","Action","Free on Plex","https://watch.plex.tv/"],
+["The Ark","TV","Sci‑Fi","Free on Plex","https://watch.plex.tv/"],
+["Veronica Mars","TV","Drama","Free on Plex","https://watch.plex.tv/"],
+["Nikita","TV","Action","Free on Plex","https://watch.plex.tv/"],
+["The Terror","TV","Horror","Free on Plex","https://watch.plex.tv/"],
+["My Little Pony: Friendship Is Magic","TV","Animation","Free on Plex","https://watch.plex.tv/"],
+["Sands of Iwo Jima","1949","Action","Free on Plex","https://watch.plex.tv/"],
+["Big Buck Bunny","2008","Animation","Authorized sample video","https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4"],
+["Sintel","2010","Animation","Authorized sample video","https://media.w3.org/2010/05/sintel/trailer.mp4"]
 ];
-const cats=["All","Action","Anime","Animation"];
-let activeCat="All", query="";
-const $=id=>document.getElementById(id);
-const dbp=new Promise((resolve,reject)=>{const r=indexedDB.open("MovieHubFinalDB",1);r.onupgradeneeded=()=>r.result.createObjectStore("downloads",{keyPath:"id"});r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});
-async function dbGetAll(){const db=await dbp;return new Promise((res,rej)=>{const t=db.transaction("downloads","readonly"),s=t.objectStore("downloads").getAll();s.onsuccess=()=>res(s.result);s.onerror=()=>rej(s.error)})}
-async function dbPut(x){const db=await dbp;return new Promise((res,rej)=>{const t=db.transaction("downloads","readwrite");t.objectStore("downloads").put(x);t.oncomplete=res;t.onerror=()=>rej(t.error)})}
-async function dbDelete(id){const db=await dbp;return new Promise((res,rej)=>{const t=db.transaction("downloads","readwrite");t.objectStore("downloads").delete(id);t.oncomplete=res;t.onerror=()=>rej(t.error)})}
-function toast(m){$("toast").textContent=m;$("toast").classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>$("toast").classList.remove("show"),2600)}
-function posterClass(i){return ["#273044","#3a2630","#26372f","#343026","#292c42"][i%5]}
-function renderTabs(){ $("tabs").innerHTML=cats.map(c=>`<button class="tab ${c===activeCat?"active":""}" onclick="setCat('${c}')">${c}</button>`).join("") }
-function filtered(){return movies.filter(m=>(activeCat==="All"||m.cat===activeCat)&&(!query||(m.title+" "+m.cat).toLowerCase().includes(query.toLowerCase())))}
-function render(){
- renderTabs();const list=filtered();$("count").textContent=`${list.length} title${list.length===1?"":"s"}`;
- $("catalog").innerHTML=list.length?list.map((m,i)=>`<article class="card"><div class="poster" style="background:linear-gradient(135deg,${posterClass(i)},#10131a)"><span class="tag">${m.cat}</span><div class="posterTitle">${m.title}</div></div><div class="body"><div class="meta">${m.year} • ${m.desc}</div><div class="actions"><button class="smallbtn" onclick="play('${m.id}')">▶ Play</button><button class="smallbtn download" onclick="downloadMovie('${m.id}')">⇩ Download</button></div></div></article>`).join(""):`<div class="empty" style="grid-column:1/-1"><strong>No titles found</strong>Try another search or category.</div>`;
-}
-function setCat(c){activeCat=c;render()}
-$("search").addEventListener("input",e=>{query=e.target.value;render()});
-async function play(id){
- const m=movies.find(x=>x.id===id); if(!m.src){toast("Add an authorized video URL for this title first.");return}
- $("modalTitle").textContent=m.title;$("modal").classList.add("show");$("player").src=m.src;try{await $("player").play()}catch(e){}
-}
-$("close").onclick=()=>{ $("player").pause();$("player").removeAttribute("src");$("player").load();$("modal").classList.remove("show") };
-$("modal").addEventListener("click",e=>{if(e.target.id==="modal")$("close").click()});
-async function downloadMovie(id){
- const m=movies.find(x=>x.id===id);if(!m.src){toast("This title has no download source yet.");return}
- toast("Downloading… keep MovieHub open.");
- try{
-   const res=await fetch(m.src);if(!res.ok)throw Error("HTTP "+res.status);
-   const blob=await res.blob();
-   await dbPut({id:m.id,title:m.title,cat:m.cat,year:m.year,type:blob.type,blob,created:Date.now()});
-   await renderDownloads();toast("Saved for offline playback ✓");
- }catch(e){toast("Download failed. The source must allow browser downloads (CORS) and be authorized.");}
-}
-async function renderDownloads(){
- const all=await dbGetAll();$("downloadCount").textContent=`${all.length} saved`;$("downloadEmpty").style.display=all.length?"none":"block";
- $("downloadList").innerHTML=all.sort((a,b)=>b.created-a.created).map(x=>`<div class="download-item"><div class="thumb">▶</div><div class="di"><strong>${x.title}</strong><small>${x.cat} • saved offline</small></div><button class="playdl" onclick="playOffline('${x.id}')">Play</button><button class="playdl" onclick="removeOffline('${x.id}')">×</button></div>`).join("");
-}
-async function playOffline(id){const all=await dbGetAll(),x=all.find(a=>a.id===id);if(!x)return;const url=URL.createObjectURL(x.blob);$("modalTitle").textContent=x.title;$("modal").classList.add("show");$("player").src=url;$("player").onended=()=>URL.revokeObjectURL(url);try{await $("player").play()}catch(e){}}
-async function removeOffline(id){await dbDelete(id);renderDownloads();toast("Removed from offline library.");}
-document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>{
- document.querySelectorAll(".navbtn").forEach(x=>x.classList.remove("active"));b.classList.add("active");
- const n=b.dataset.nav;if(n==="downloads"){$("home").classList.add("hide");$("downloads").classList.add("show");renderDownloads()}
- else{$("downloads").classList.remove("show");$("home").classList.remove("hide");if(n==="search"){$("search").focus();window.scrollTo({top:0,behavior:"smooth"})}}
-});
-let deferredPrompt=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e});
-$("installBtn").onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null}else toast("On iPhone: Safari → Share → Add to Home Screen.");};
-if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
-render();renderDownloads();
-</script>
-</body>
-</html>
+let active="All"; const chips=document.getElementById("chips"),grid=document.getElementById("grid"),search=document.getElementById("search");
+genres.forEach(g=>{let b=document.createElement("button");b.className="chip"+(g==="All"?" active":"");b.textContent=g;b.onclick=()=>{active=g;document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()};chips.appendChild(b)});
+function render(){let q=search.value.toLowerCase();let a=items.filter(x=>(active==="All"||x[2]===active)&&x.join(" ").toLowerCase().includes(q));grid.innerHTML=a.map((x)=>`<article class="card"><div class="poster">${x[0]}</div><div class="meta"><div class="title">${x[0]}</div><div class="small">${x[1]} • ${x[2]}</div></div><button onclick="details(${items.indexOf(x)})">View</button></article>`).join("")||'<div class="empty">No titles found.</div>'}
+function details(i){let x=items[i];document.getElementById("detail").innerHTML=`<h1>${x[0]}</h1><p class="small">${x[1]} • ${x[2]}</p><p>${x[3]}</p><button class="btn" onclick="window.open('${x[4]}','_blank')">Open Official Source</button>`;document.getElementById("modal").style.display="block"}
+function openInfo(t,p){document.getElementById("detail").innerHTML=`<h2>${t}</h2><p class="small">${p}</p>`;document.getElementById("modal").style.display="block"}
+function closeModal(){document.getElementById("modal").style.display="none"} function focusSearch(){search.focus();scrollTo(0,0)}
+search.addEventListener("input",render);render();if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script></body></html>
