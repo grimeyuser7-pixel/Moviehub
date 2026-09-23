@@ -1,16 +1,94 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#08090d"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css"><title>MovieHub 3.0</title></head><body>
-<div id="app"><header><button class="brand" data-nav="home"><b>M</b>MovieHub<small>3.0</small></button><div class="search">⌕<input id="q" placeholder="Search movies, actors, genres..."></div><button class="avatar" id="profileBtn">G</button></header>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07080c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css">
+<title>MovieHub 4.0</title>
+</head>
+<body>
+<div id="app">
+<header class="topbar">
+  <button class="brand" data-nav="home"><b>M</b><span>MovieHub</span><small>4.0</small></button>
+  <div class="searchBox">⌕<input id="q" autocomplete="off" placeholder="Search movies, genres, years..."></div>
+  <button class="avatar" id="profileBtn">G</button>
+</header>
+
 <main>
-<section id="home" class="view active"><div class="hero"><div><small>FEATURED</small><h1>YOUR NEXT<br><em>FAVORITE</em><br>MOVIE.</h1><p>Discover movies, keep your place, build your list and save supported titles for offline viewing.</p><button class="red" id="browse">▶ Browse Movies</button><button class="dark" id="surprise">🎲 Surprise Me</button></div></div>
-<div id="continueSection" class="section hidden"><div class="head"><h2>Continue Watching</h2></div><div id="continue" class="row"></div></div>
-<div class="section"><div class="head"><h2>Trending Now</h2><small id="catalogCount"></small></div><div id="trending" class="row"></div></div>
-<div class="section"><div class="head"><h2>Browse by Genre</h2></div><div id="genres" class="chips"></div></div>
-<div class="section"><div class="head"><h2>Recommended For You</h2></div><div id="catalog" class="row"></div></div></section>
-<section id="searchView" class="view"><div class="title"><small>SEARCH</small><h1>Find something to watch.</h1></div><div id="results" class="row"></div></section>
-<section id="listView" class="view"><div class="title"><small>MY LIST</small><h1>Saved for later</h1></div><div id="mylist" class="row"></div><div id="listEmpty" class="empty">Add movies to My List and they will appear here.</div></section>
-<section id="downloadsView" class="view"><div class="title"><small>OFFLINE</small><h1>Downloads</h1><p>Compatible authorized videos saved on this device.</p></div><div id="downloads" class="row"></div><div id="downEmpty" class="empty">No downloads yet.</div></section>
-<section id="profileView" class="view"><div class="title"><small>PROFILE</small><h1 id="profileName">Grimey</h1></div><div class="profileCard"><div class="bigAvatar">G</div><div><b>My MovieHub</b><p>Personal recommendations, My List and viewing history.</p></div></div><div class="settings"><button id="kids">👶 Kids Mode <span>OFF</span></button><button id="clearHistory">🧹 Clear Viewing History</button><button id="clearList">♡ Clear My List</button></div></section>
+<section id="home" class="view active">
+  <div class="hero">
+    <div class="heroCopy">
+      <div class="eyebrow">MOVIEHUB ORIGINAL EXPERIENCE</div>
+      <h1>YOUR NEXT<br><em>FAVORITE</em><br>MOVIE.</h1>
+      <p>Discover titles, save your favorites, resume where you stopped and keep supported videos available offline.</p>
+      <div><button class="primary" id="browse">▶ Browse</button><button class="secondary" id="surprise">🎲 Surprise Me</button></div>
+    </div>
+  </div>
+
+  <section id="continueSection" class="section hidden"><div class="sectionHead"><h2>Continue Watching</h2><button class="textBtn" id="clearHistory">Clear</button></div><div id="continue" class="row"></div></section>
+  <section class="section"><div class="sectionHead"><h2>Trending Now</h2><small id="catalogCount"></small></div><div id="trending" class="row"></div></section>
+  <section class="section"><div class="sectionHead"><h2>Top Picks</h2></div><div id="topPicks" class="row"></div></section>
+  <section class="section"><div class="sectionHead"><h2>New Additions</h2></div><div id="newAdditions" class="row"></div></section>
+  <section class="section"><div class="sectionHead"><h2>Browse by Genre</h2></div><div id="genres" class="chips"></div></section>
+  <section class="section"><div class="sectionHead"><h2>Recommended For You</h2></div><div id="recommended" class="row"></div></section>
+</section>
+
+<section id="searchView" class="view">
+  <div class="title"><div class="eyebrow">SEARCH</div><h1>Find something to watch.</h1><p id="searchHint">Search the catalog by title, year or genre.</p></div>
+  <div id="results" class="grid"></div>
+  <div id="searchEmpty" class="empty hidden">No matching titles found.</div>
+</section>
+
+<section id="listView" class="view">
+  <div class="title"><div class="eyebrow">MY LIST</div><h1>Saved for later</h1><p>Your saved titles are stored on this device.</p></div>
+  <div id="mylist" class="grid"></div><div id="listEmpty" class="empty">Add movies to My List and they will appear here.</div>
+</section>
+
+<section id="downloadsView" class="view">
+  <div class="title"><div class="eyebrow">OFFLINE</div><h1>Downloads</h1><p>Compatible authorized videos saved on this device.</p></div>
+  <div class="downloadStats"><b id="downloadCount">0</b><span>saved videos</span><b id="storageUsed">0 MB</b><span>storage used</span></div>
+  <div id="downloads" class="grid"></div><div id="downEmpty" class="empty">No downloads yet.</div>
+</section>
+
+<section id="profileView" class="view">
+  <div class="title"><div class="eyebrow">PROFILE</div><h1>Who’s watching?</h1></div>
+  <div id="profiles" class="profiles"></div>
+  <div class="settings">
+    <button id="kids">👶 Kids Mode <span>OFF</span></button>
+    <button id="clearList">♡ Clear My List</button>
+    <button id="clearAllData">⚠️ Reset MovieHub on this device</button>
+  </div>
+</section>
 </main>
-<nav><button data-nav="home" class="active">⌂<small>Home</small></button><button data-nav="search">⌕<small>Search</small></button><button data-nav="list">♡<small>My List</small></button><button data-nav="downloads">⇩<small>Downloads</small></button></nav></div>
+
+<nav>
+  <button data-nav="home" class="active">⌂<small>Home</small></button>
+  <button data-nav="search">⌕<small>Search</small></button>
+  <button data-nav="list">♡<small>My List</small></button>
+  <button data-nav="downloads">⇩<small>Downloads</small></button>
+</nav>
+</div>
+
 <div id="modal" class="overlay hidden"><div class="sheet"><button id="close" class="close">×</button><div id="details"></div></div></div>
-<div id="player" class="player hidden"><button id="closePlayer" class="close">×</button><video id="video" controls playsinline></video><div class="playerbar"><div><b id="now"></b><small id="status"></small></div><button id="pdown" class="red">⇩</button></div></div><div id="toast"></div><script src="app.js"></script></body></html>
+
+<div id="player" class="player hidden">
+  <button id="closePlayer" class="close playerClose">×</button>
+  <video id="video" playsinline preload="metadata"></video>
+  <div class="playerControls">
+    <div class="progressWrap"><input id="seek" type="range" min="0" max="100" value="0"></div>
+    <div class="controlRow">
+      <button id="back10">↶ 10</button><button id="playPause">▶</button><button id="forward10">10 ↷</button>
+      <button id="speedBtn">1×</button><button id="nativeBtn">⚙</button>
+    </div>
+    <div class="playerInfo"><div><b id="now"></b><small id="status"></small></div><button id="pdown" class="primary">⇩ Save</button></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
